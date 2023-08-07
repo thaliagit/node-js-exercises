@@ -6,6 +6,7 @@ import express from "express";
 import dotenv from "dotenv";
 import 'express-async-errors';
 import morgan from "morgan";
+import Joi from "joi";
 
 dotenv.config();
 
@@ -32,6 +33,20 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 
+const planetSchema = Joi.object({
+  id: Joi.number().required(),
+  name: Joi.string().required(),
+});
+
+const validatePlanet = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const { error } = planetSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};
+
+
 app.get('/planets', (req, res) => {
   res.status(200).json(planets);
 });
@@ -40,14 +55,14 @@ app.get('/planets/:id', (req, res) => {
   const planet = planets.find(p => p.id === Number(id))
   res.status(200).json(planet);
 });
-app.post('/planets', (req, res) => {
+app.post('/planets', validatePlanet, (req, res) => {
   const {id, name} = req.body 
   const newPlanet = {id, name}
   planets = [...planets, newPlanet]
   console.log(planets)
   res.status(201).json({msg: "new planet has been created"})
 })
-app.put('/planets/:id', (req, res) => {
+app.put('/planets/:id', validatePlanet, (req, res) => {
   const {id} = req.params;
   const {name} = req.body;
   console.log("this is the req body: ", req.body)
