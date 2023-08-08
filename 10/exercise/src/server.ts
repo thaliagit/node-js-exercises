@@ -1,7 +1,3 @@
-// const TODO: string = "start writing your Express API server here :)";
-
-// console.log(TODO);
-
 import express from "express";
 import dotenv from "dotenv";
 import 'express-async-errors';
@@ -17,8 +13,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 const planetSchema = Joi.object({
-  id: Joi.number().required(),
-  name: Joi.string().required(),
+  name: Joi.string().required()
 });
 
 const validatePlanet = (req: express.Request, res: express.Response, next: express.NextFunction) => {
