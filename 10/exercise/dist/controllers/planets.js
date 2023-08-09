@@ -7,23 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import pgPromise from "pg-promise";
-const db = pgPromise()("postgres://postgres:postgres@localhost:5432/postgres");
-const setupDb = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield db.none(`
-  DROP TABLE IF EXISTS planets;
-
-  CREATE TABLE planets(
-    id SERIAL NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
-    image TEXT
-  );
-  `);
-    yield db.none(`INSERT INTO planets (name) VALUES ('Earth')`);
-    yield db.none(`INSERT INTO planets (name) VALUES ('Mars')`);
-    yield db.none(`INSERT INTO planets (name) VALUES ('Venus')`);
-});
-setupDb();
+import { db } from "../db.js";
 //creating controllers, getting the functions we used 
 //during the requests
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
