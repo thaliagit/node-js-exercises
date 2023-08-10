@@ -4,6 +4,7 @@ import 'express-async-errors';
 import morgan from "morgan";
 import Joi from "joi";
 import { getAll, getOneById, create, updateById, deleteById, createImage } from "./controllers/planets.js";
+import { logIn, signUp } from "./controllers/users.js";
 import multer from "multer";
 dotenv.config();
 const storage = multer.diskStorage({
@@ -38,6 +39,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong!');
 });
 app.post("/planets/:id/image", upload.single("image"), createImage);
+app.post("/users/login", logIn);
+app.post("/users/signup", signUp);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
