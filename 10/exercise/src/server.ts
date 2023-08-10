@@ -4,8 +4,10 @@ import 'express-async-errors';
 import morgan from "morgan";
 import Joi from "joi";
 import {getAll, getOneById, create, updateById, deleteById, createImage} from "./controllers/planets.js"
-import {logIn, signUp} from "./controllers/users.js"
+import {logIn, signUp, logOut} from "./controllers/users.js"
 import multer from "multer";
+import authorize from "./authorize.js";
+import "./passport.js";
 dotenv.config();
 const storage = multer.diskStorage({
   destination: (req,file,cb) => {
@@ -46,6 +48,7 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 app.post("/planets/:id/image",upload.single("image"), createImage)
 app.post("/users/login", logIn);
 app.post("/users/signup", signUp);
+app.get("/users/logout", authorize,logOut)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
